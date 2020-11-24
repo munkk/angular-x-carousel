@@ -1,0 +1,12 @@
+.app {
+  text-align: center;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+
+  > div {
+    width: 100%;
+    height: 400px;
+    margin: 200px auto 0px;
+  }
+}

@@ -6,7 +6,6 @@
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
-    "downlevelIteration": true,
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
@@ -15,6 +14,10 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "strict": false,
+    "strictPropertyInitialization": false,
+    "strictNullChecks": false,
+    "downlevelIteration": true
   }
 }

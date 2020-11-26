@@ -41,7 +41,7 @@ export class CarouselComponent implements AfterViewInit {
     @ViewChild('scene') sceneRef: any;
     @ViewChild('wrapper') carouselWrapperRef: any;
     @ContentChildren(SlideDirective) slides: QueryList<SlideDirective>;
-    @Output() onRotate: EventEmitter<any> = new EventEmitter();
+    @Output() onChange: EventEmitter<any> = new EventEmitter();
 
     constructor(private renderer: Renderer2) { }
 
@@ -58,7 +58,7 @@ export class CarouselComponent implements AfterViewInit {
         if (!this.slides.length) return;
 
         this.slides.forEach((item, idx) => {
-            const slide = new Slide(idx, item, item.element.nativeElement)
+            const slide = new Slide(idx, item.data, item.element.nativeElement)
             this.list.push(slide);
         })
 
@@ -107,7 +107,7 @@ export class CarouselComponent implements AfterViewInit {
             "translateZ(" + -this.radius + "px) " + "rotateY" + "(" + angle + "deg)";
 
         this.updateClassList();
-        this.onRotate.emit(this.getCurrentNode());
+        this.onChange.emit(this.getCurrentNode());
     }
 
     getActualIndex() {

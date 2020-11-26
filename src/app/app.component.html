@@ -1,8 +1,8 @@
 <div class="app">
   <div>
-    <carousel (onRotate)="handleRotate($event)">
-      <div slide *ngFor="let item of items">
-        <img [src]="item" alt="space" />
+    <carousel (onChange)="handleChange($event)">
+      <div slide [data]="item" *ngFor="let item of items">
+        <img [src]="item.imageSrc" alt="space" />
       </div>
     </carousel>
   </div>

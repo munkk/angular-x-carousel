@@ -1,9 +1,10 @@
-import { AfterContentInit, AfterViewInit, Component, ContentChild, ContentChildren, EventEmitter, Input, Output, QueryList, Renderer2, TemplateRef, ViewChild } from '@angular/core';
+import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, ContentChild, ContentChildren, EventEmitter, Input, Output, QueryList, Renderer2, TemplateRef, ViewChild } from '@angular/core';
 import LinkedList from 'src/models/LinkedList';
 import Slide from 'src/models/Slide';
 
 import { SlideDirective } from '../slide/slide.directive';
 
+declare var ResizeObserver: any;;
 
 const classes = {
     itemCurrent: "x-current",
@@ -43,7 +44,7 @@ export class CarouselComponent implements AfterViewInit {
     @ContentChildren(SlideDirective) slides: QueryList<SlideDirective>;
     @Output() onChange: EventEmitter<any> = new EventEmitter();
 
-    constructor(private renderer: Renderer2) { }
+    constructor(private renderer: Renderer2, private cdRef: ChangeDetectorRef) { }
 
     ngAfterViewInit() {
         if (!this.sceneRef) return;
@@ -51,6 +52,7 @@ export class CarouselComponent implements AfterViewInit {
         this.buildList();
         this.calculateDimension();
         this.setCellsDimensions();
+        this.setResizeListener();
         this.changeCarousel();
     }
 
@@ -82,6 +84,19 @@ export class CarouselComponent implements AfterViewInit {
         })
     }
 
+    setResizeListener() {
+        const resizeObserver = new ResizeObserver(entries => {
+            entries.forEach(scene => {
+                const { width, height } = scene.contentRect;
+                this.calculateDimension();
+                this.setCellsDimensions();
+                this.changeCarousel();
+            });
+        });
+
+        resizeObserver.observe(this.sceneRef.nativeElement);
+    }
+
     changeCarousel() {
         if (!this.list.length) return;
 
@@ -105,6 +120,11 @@ export class CarouselComponent implements AfterViewInit {
         const angle = this.theta * this.currentIndex * -1;
         this.carouselWrapperRef.nativeElement.style.transform =
             "translateZ(" + -this.radius + "px) " + "rotateY" + "(" + angle + "deg)";
+
+        setTimeout(
+            () => (this.carouselWrapperRef.nativeElement.style.transition = "transform 1s"),
+            0
+        );
 
         this.updateClassList();
         this.onChange.emit(this.getCurrentNode());

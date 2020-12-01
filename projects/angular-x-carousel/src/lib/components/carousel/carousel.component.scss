@@ -1,0 +1,47 @@
+:host {
+  .x {
+    &-scene {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      margin: 0 auto;
+      perspective: 1000px;
+
+      &-lcontrol {
+        position: absolute;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        left: -100%;
+      }
+
+      &-rcontrol {
+        position: absolute;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        right: -100%;
+      }
+    }
+
+    &-carousel {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      transform-style: preserve-3d;
+      transition: transform 0s;
+    }
+  }
+}
+
+::ng-deep {
+  .x-carousel__slide {
+    position: absolute;
+    // transition: transform 1s, opacity 1s;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}

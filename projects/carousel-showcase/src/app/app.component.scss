@@ -1,0 +1,92 @@
+.example-page {
+  .header {
+    background-color: #282c34;
+    color: #ffffff;
+    position: relative;
+
+    &__inner {
+      padding: 5rem;
+      max-width: 1500px;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+
+      &-title {
+        font-size: 2rem;
+        text-align: center;
+      }
+
+      &-frameworks {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 2rem;
+
+        a {
+          color: white;
+          text-decoration: none;
+        }
+      }
+    }
+
+    .framework {
+      font-size: 4rem;
+      text-align: center;
+      margin: 0 5px;
+
+      span {
+        background-color: #0078cf;
+        font-size: 0.6rem;
+        padding: 5px 10px;
+        border-radius: 11px;
+        display: block;
+        width: 100px;
+        line-height: 11px;
+        text-transform: uppercase;
+      }
+    }
+  }
+
+  .body {
+    &__inner {
+      &-example {
+        width: 40%;
+        max-width: 450px;
+        height: 400px;
+        margin: 100px auto 0px;
+        position: relative;
+
+        .tooltip {
+          top: -76px;
+        }
+      }
+    }
+  }
+
+  .footer {
+    a {
+      text-decoration: none;
+      vertical-align: middle;
+      background-color: #0078cf;
+      color: white;
+    }
+  }
+}
+
+.fork-me {
+  width: 147px;
+  height: 147px;
+  background-image: url("../assets/forkme_right_white_ffffff.svg");
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  background-repeat: no-repeat;
+
+  a {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+}

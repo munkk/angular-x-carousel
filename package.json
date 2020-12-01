@@ -5,11 +5,11 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "build:showcase": "ng build carousel-showcase",
+    "build:showcase": "ng build carousel-showcase --base-href=https://munkk.github.io/angular-x-carousel/",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "deploy": "gh-pages -d dist/carousel-showcase"
+    "publish:demo": "npx angular-cli-ghpages --dir=./dist/carousel-showcase"
   },
   "private": true,
   "dependencies": {

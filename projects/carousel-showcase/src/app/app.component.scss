@@ -49,6 +49,9 @@
 
   .body {
     &__inner {
+      display: flex;
+      flex-direction: column;
+
       &-example {
         width: 40%;
         max-width: 450px;
@@ -70,6 +73,14 @@
       background-color: #0078cf;
       color: white;
     }
+  }
+}
+
+.material {
+  &-slider {
+    width: 90%;
+    max-width: 450px;
+    margin: 30px auto;
   }
 }
 

@@ -39,11 +39,26 @@
         </ng-container>
 
         <carousel (onChange)="handleChange($event)">
-          <div slide [data]="element" *ngFor="let element of elements">
+          <div
+            slide
+            *ngFor="let element of elements; trackBy: trackByFn"
+            [data]="element"
+          >
             <periodic-element [element]="element"></periodic-element>
           </div>
         </carousel>
       </div>
+
+      <mat-slider
+        class="material-slider"
+        thumbLabel
+        tickInterval="1"
+        min="1"
+        max="20"
+        step="1"
+        [value]="elements.length"
+        (change)="setElements($event)"
+      ></mat-slider>
     </div>
   </section>
 

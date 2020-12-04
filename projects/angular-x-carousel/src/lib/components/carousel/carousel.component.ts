@@ -1,4 +1,4 @@
-import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, ContentChild, ContentChildren, EventEmitter, Input, Output, QueryList, Renderer2, TemplateRef, ViewChild } from '@angular/core';
+import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, ContentChild, ContentChildren, EventEmitter, Input, OnChanges, OnDestroy, Output, QueryList, Renderer2, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import LinkedList from '../../models/LinkedList';
 import Slide from '../../models/Slide';
 
@@ -32,16 +32,33 @@ const noop = () => null;
     templateUrl: './carousel.component.html',
     styleUrls: ['./carousel.component.scss']
 })
-export class CarouselComponent implements AfterViewInit {
-    list = new LinkedList();
+export class CarouselComponent implements AfterViewInit, OnDestroy {
+    list: LinkedList;
     theta: number = 0;
     radius: number = 0;
     cellsCount: number = 0;
     currentIndex: number = 0;
+    private resizeObserver: typeof ResizeObserver;
+    private slides: QueryList<SlideDirective>;
 
     @ViewChild('scene') sceneRef: any;
     @ViewChild('wrapper') carouselWrapperRef: any;
-    @ContentChildren(SlideDirective) slides: QueryList<SlideDirective>;
+    @ContentChildren(SlideDirective) set queryListSlides(slides: QueryList<SlideDirective>) {
+        this.slides = slides;
+
+        //means user changes slides
+        if (this.carouselWrapperRef) {
+            this.renderer.setStyle(this.carouselWrapperRef.nativeElement, 'transition', 'transform 0s');
+            this.buildList();
+            this.calculateDimension();
+            this.setCellsDimensions();
+            this.changeCarousel();
+            setTimeout(
+                () => (this.renderer.setStyle(this.carouselWrapperRef.nativeElement, 'transition', 'transform 1s')),
+                0
+            )
+        }
+    }
     @Output() onChange: EventEmitter<any> = new EventEmitter();
 
     constructor(private renderer: Renderer2, private cdRef: ChangeDetectorRef) { }
@@ -56,9 +73,14 @@ export class CarouselComponent implements AfterViewInit {
         this.changeCarousel();
     }
 
+    ngOnDestroy() {
+        this.resizeObserver.unobserve(this.sceneRef.nativeElement);
+    }
+
     buildList() {
         if (!this.slides.length) return;
 
+        this.list = new LinkedList();
         this.slides.forEach((item, idx) => {
             const slide = new Slide(idx, item.data, item.element.nativeElement)
             this.list.push(slide);
@@ -85,16 +107,20 @@ export class CarouselComponent implements AfterViewInit {
     }
 
     setResizeListener() {
-        const resizeObserver = new ResizeObserver(entries => {
+        this.resizeObserver = new ResizeObserver(entries => {
             entries.forEach(scene => {
-                const { width, height } = scene.contentRect;
+                this.renderer.setStyle(this.carouselWrapperRef.nativeElement, 'transition', 'transform 0s');
                 this.calculateDimension();
                 this.setCellsDimensions();
                 this.changeCarousel();
+                setTimeout(
+                    () => (this.renderer.setStyle(this.carouselWrapperRef.nativeElement, 'transition', 'transform 1s')),
+                    0
+                )
             });
         });
 
-        resizeObserver.observe(this.sceneRef.nativeElement);
+        this.resizeObserver.observe(this.sceneRef.nativeElement);
     }
 
     changeCarousel() {
@@ -103,8 +129,10 @@ export class CarouselComponent implements AfterViewInit {
         let currentNode = this.list.getNodeAtIndex(0);
         while (true) {
             const cellAngle = this.theta * currentNode.value.id;
-            currentNode.value.element.style.transform =
-                "rotateY" + "(" + cellAngle + "deg) translateZ(" + this.radius + "px)";
+
+            if (currentNode.value.element) {
+                this.renderer.setStyle(currentNode.value.element, 'transform', 'rotateY' + '(' + cellAngle + 'deg) translateZ(' + this.radius + 'px)');
+            }
 
             if (currentNode.value.id === this.list.length - 1) break;
 
@@ -118,11 +146,13 @@ export class CarouselComponent implements AfterViewInit {
         if (!this.carouselWrapperRef) return;
 
         const angle = this.theta * this.currentIndex * -1;
-        this.carouselWrapperRef.nativeElement.style.transform =
-            "translateZ(" + -this.radius + "px) " + "rotateY" + "(" + angle + "deg)";
+        this.renderer.setStyle(this.carouselWrapperRef.nativeElement, 'transform', "translateZ(" + -this.radius + "px) " + "rotateY" + "(" + angle + "deg)");
+
 
         setTimeout(
-            () => (this.carouselWrapperRef.nativeElement.style.transition = "transform 1s"),
+            () => (
+                this.renderer.setStyle(this.carouselWrapperRef.nativeElement, 'transition', "transform 1s")
+            ),
             0
         );
 

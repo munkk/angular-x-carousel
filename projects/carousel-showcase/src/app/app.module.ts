@@ -9,12 +9,16 @@ import { AppComponent } from './app.component';
 import { CarouselModule } from 'projects/angular-x-carousel/src/public-api';
 import { PeriodicElement } from './components/periodic-element/periodic-element.component';
 import { Tooltip } from './components/tooltip/tooltip.component';
+import { FeaturesPageComponent } from './pages/features-page/features-page.component';
+import { MainPageComponent } from './pages/main-page/main-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PeriodicElement,
     Tooltip,
+    FeaturesPageComponent,
+    MainPageComponent
   ],
   imports: [
     BrowserModule,
